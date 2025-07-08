@@ -28,7 +28,7 @@ except ImportError:
 
 # Set page config as the first Streamlit command
 st.set_page_config(
-    page_title="Contract Analysis Pro",
+    page_title="IDP",
     page_icon="📄",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -45,9 +45,16 @@ st.markdown("""
         background-color: #f7f7f7;
     }
     .stAppToolbar {visibility: hidden;}
+    
     .stMainBlockContainer {
-        padding: 1em    ;
+        padding: 2em !important;
     }
+    
+    .stVerticalBlockBorderWrapper{
+        width: 35% !important;
+        margin: 0 auto !important;
+    }
+
     .stButton>button {
         width: 100%;
         border-radius: 6px;
@@ -80,6 +87,7 @@ st.markdown("""
         background-color: #e30613;
         color: #fff;
         border-radius: 8px 8px 0 0;
+        padding: 0.5rem 0.5rem 0.5rem 0.5rem;
     }
     .stMarkdown, .stMetric, .stExpander, .uploadedFile {
         font-family: 'Roboto', sans-serif;
@@ -441,7 +449,6 @@ class ChartUtil:
 
         try:
             if OPENAI_API_KEY:
-                st.info("Using OpenAI API for chart generation.")
                 thread = self.client.beta.threads.create(
                     messages=[{"role": "user", "content": ci_prompt}]
                 )
@@ -531,7 +538,6 @@ class ChartUI:
                 }
                 footer {visibility: hidden;}
                 h2, h3 {
-                    font-family: 'Segoe UI', sans-serif;
                     color: #333333;
                 }
                 .chart-desc {
@@ -551,15 +557,15 @@ class ChartUI:
             image_path, description = self.chart_util.generate_chart(
                 user_input)
 
-        with st.container(border=True):
+        with st.container(border=False, height=450):
             if image_path:
-                st.image(image_path, caption="📈 Gráfica Generada",
-                         use_container_width=True)
+                # Usamos columnas para centrar la imagen
+                col1, col2, col3 = st.columns([1, 2, 1])  # proporciones
+                with col2:
+                    st.image(image_path, use_container_width=True)
             else:
                 st.error("❌ No se pudo generar la gráfica. Por favor, intenta de nuevo.")
-
-
-# ----------------- STREAMLIT TAB RENDER FUNCTION ----------------- #
+                # ----------------- STREAMLIT TAB RENDER FUNCTION ----------------- #
 def render_chart_tab():
     st.markdown("## 📊 Generador de Gráficas")
     st.markdown(
@@ -1428,11 +1434,10 @@ def main():
     """Main function to run the Streamlit app."""
     # Header empresarial
     st.markdown("""
-            <div style='display: flex; align-items: center; gap: 2rem; background: #34374b; padding: 1.5rem 2rem; border-radius: 0 0 16px 16px; box-shadow: 0 2px 8px rgba(52,55,75,0.08); margin-bottom: 2rem;'>
-            <img src='https://tgv.com.ar/wp-content/uploads/2024/04/Logo-300x115.webp' width='80' style='border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);'>
-            <div>
-                <h1 style='color: #fff; font-size: 2.2rem; margin-bottom: 0.2rem; font-family: Roboto, sans-serif;'>Extracción y Análisis de Contratos Multilingüe</h1>
-                <p style='color: #e30613; font-size: 1.1rem; margin: 0; font-family: Roboto, sans-serif;'>Extrae, analiza y consulta tus contratos en una interfaz moderna, intuitiva y empresarial.</p>
+            <div style='display: flex; align-items: center; gap: 2rem; background: #34374b; padding: 1.5rem 2rem; border-radius: 0 0 16px 16px; box-shadow: 0 2px 8px rgba(52,55,75,0.08); margin-bottom: 2rem;'> 
+            <div style='flex:1; display: flex; flex-direction: column; align-items: center; justify-content: center;'>
+                <h1 style='color: #fff; font-size: 2.2rem; margin-bottom: 0.2rem; font-family: Roboto, sans-serif; text-align: center;'>Extracción y Análisis de Contratos Multilingüe</h1>
+                <p style='color: #e30613; font-size: 1.1rem; margin: 0; font-family: Roboto, sans-serif; text-align: center;'>Extrae, analiza y consulta tus contratos en una interfaz moderna, intuitiva y empresarial.</p>
             </div>
         </div>
     """, unsafe_allow_html=True)
@@ -1475,10 +1480,6 @@ def main():
             options=list(SYSTEM_PROMPTS.keys()),
             index=0  # Por defecto Inglés
         )
-
-        # Brief explanation of language selection
-        st.info(
-            f"Idioma seleccionado: {selected_language}. El sistema de extracción usará prompts y responderá en este idioma.")
 
         # File uploader with modern styling
         uploaded_files = st.file_uploader(
