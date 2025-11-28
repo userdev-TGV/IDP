@@ -1,6 +1,8 @@
 # Herramienta de Análisis de Contratos
 
-Una aplicación Streamlit para analizar contratos PDF utilizando OCR e IA. Esta herramienta ofrece tres funciones principales:
+Una aplicación para analizar contratos PDF utilizando OCR e IA. Ahora puedes elegir entre la experiencia clásica en Streamlit o un nuevo front-end React con animaciones estilo InsightBot.
+
+### Funciones principales
 1. **Extracción de Datos Estándar**: Extrae información clave del contrato como número de contrato, cliente, fechas, etc.
 2. **Extracción Personalizada**: Define tus propias reglas de extracción para contratos.
 3. **Preguntas y Respuestas sobre Contratos**: Haz preguntas sobre tu contrato y obtén respuestas generadas por IA.
@@ -86,9 +88,27 @@ Una aplicación Streamlit para analizar contratos PDF utilizando OCR e IA. Esta 
 
 ## Uso
 
-1. Inicia la aplicación Streamlit:
+### Nuevo front-end React
+
+1. Inicia la API FastAPI (requiere las variables de entorno configuradas):
    ```
-   streamlit run poc_app.py
+   uvicorn api_server:app --host 0.0.0.0 --port 8000 --reload
+   ```
+
+2. En otra terminal instala y levanta el cliente React:
+   ```
+   cd frontend
+   npm install
+   npm run dev -- --host
+   ```
+
+3. Abre el navegador en la URL indicada por Vite (por defecto http://localhost:5173). Si necesitas apuntar a otro backend define `VITE_API_BASE` en un `.env.local` dentro de `frontend/`.
+
+### Experiencia Streamlit
+
+1. Inicia la aplicación Streamlit tradicional:
+   ```
+   streamlit run app.py
    ```
 
 2. Abre tu navegador web en la URL mostrada en la terminal (normalmente http://localhost:8501)
